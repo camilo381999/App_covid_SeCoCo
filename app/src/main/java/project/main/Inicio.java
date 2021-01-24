@@ -31,9 +31,6 @@ public class Inicio extends AppCompatActivity implements View.OnClickListener {
     private TextView textViewName;
     private DatabaseReference nDatabase;
 
-    double latitud=0;
-    double longitud=0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,25 +106,6 @@ public class Inicio extends AppCompatActivity implements View.OnClickListener {
             }
         });
     }
-
-    public double getLatitud() {
-        return latitud;
-    }
-
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
-    }
-
-    public double getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(double longitud) {
-        this.longitud = longitud;
-    }
-
-
-
 
 
 }

@@ -22,37 +22,29 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
 
+    private int MY_PERMISSION_REQUEST_READ_CONTACTS;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
-
+    DatabaseReference mDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ubicacion);
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
+       mDatabase = FirebaseDatabase.getInstance().getReference();
         subirLatLongFirebase();
 
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        setContentView(R.layout.activity_ubicacion);
 
-        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
-        }
-
-        int permissionCheck2 = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-            }
-        }
     }
 
     /**
@@ -71,12 +63,19 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(a, b);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Ubicación"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     private void subirLatLongFirebase() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(Ubicacion.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSION_REQUEST_READ_CONTACTS);
+
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -95,6 +94,11 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                             a=location.getLatitude();
                             b=location.getLongitude();
                             Toast.makeText(Ubicacion.this, "latitud: "+a+"Longitud: "+b, Toast.LENGTH_LONG).show();
+                            //Se meten las coordenadas a la base de datos
+                            Map<String,Object> latLang = new HashMap<>();
+                            latLang.put("latitud",a);
+                            latLang.put("longitud",b);
+                            mDatabase.child("Ubicacion").push().setValue(latLang);
 
                             //aca se llama a maps
                             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
