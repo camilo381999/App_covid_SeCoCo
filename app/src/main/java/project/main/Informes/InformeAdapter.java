@@ -1,5 +1,6 @@
 package project.main.Informes;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import project.main.R;
@@ -35,21 +37,27 @@ public class InformeAdapter extends RecyclerView.Adapter<InformeAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Informe informes=informesList.get(position);
         holder.textViewInformeCed.setText(informes.getCedula());
         holder.textViewInformeCor.setText(informes.getCorreo());
         holder.textViewInformeEst.setText(informes.getEstado());
         holder.textViewInformeFec.setText(informes.getFecha());
-        holder.textViewInformePun.setText(informes.getPuntaje());
 
+        //interactua con los items
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(holder.itemView.getContext(),Detalle_Informe.class);
+                intent.putExtra("itemDetail", (Serializable) informes);
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return informesList.size();
-
-
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -57,7 +65,7 @@ public class InformeAdapter extends RecyclerView.Adapter<InformeAdapter.ViewHold
         private TextView textViewInformeCor;
         private TextView textViewInformeEst;
         private TextView textViewInformeFec;
-        private TextView textViewInformePun;
+
 
         public View view;
         public ViewHolder(View view ){
@@ -67,13 +75,6 @@ public class InformeAdapter extends RecyclerView.Adapter<InformeAdapter.ViewHold
             this.textViewInformeCor=(TextView)view.findViewById(R.id.textViewInformeCor);
             this.textViewInformeEst=(TextView)view.findViewById(R.id.textViewInformeEst);
             this.textViewInformeFec=(TextView)view.findViewById(R.id.textViewInformeFec);
-            this.textViewInformePun=(TextView)view.findViewById(R.id.textViewInformePun);
-
-
-
-
-
-
 
         }
     }

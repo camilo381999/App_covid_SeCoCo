@@ -12,35 +12,38 @@
         android:layout_width="103dp"
         android:layout_height="wrap_content"
         android:text="Cedula:"
-        android:textSize="10dp" />
+        android:textSize="12dp"
+        android:layout_margin="10dp"
+        />
 
     <TextView
         android:id="@+id/textViewInformeCor"
         android:layout_width="107dp"
         android:layout_height="match_parent"
         android:text="Correo:"
-        android:textSize="10dp" />
+        android:textSize="12dp"
+        android:layout_margin="10dp"
+        />
 
     <TextView
         android:id="@+id/textViewInformeEst"
         android:layout_width="68dp"
         android:layout_height="wrap_content"
         android:text="Estado:"
-        android:textSize="10dp" />
+        android:textSize="12dp"
+        android:layout_margin="10dp"
+        />
 
     <TextView
         android:id="@+id/textViewInformeFec"
         android:layout_width="87dp"
         android:layout_height="wrap_content"
         android:text="Fecha:"
-        android:textSize="10dp" />
+        android:textSize="12dp"
+        android:layout_margin="10dp"
+        />
 
-    <TextView
-        android:id="@+id/textViewInformePun"
-        android:layout_width="45dp"
-        android:layout_height="wrap_content"
-        android:text="puntaje:"
-        android:textSize="10dp" />
+
 </LinearLayout>
 
 </RelativeLayout>

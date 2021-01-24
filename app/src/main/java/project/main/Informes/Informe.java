@@ -1,21 +1,44 @@
 package project.main.Informes;
 
-public class Informe {
+import java.io.Serializable;
+
+public class Informe implements Serializable {
     String cedula="";
     String correo="";
     String estado="";
     String fecha="";
     String puntaje="";
+    String edad="";
+    String genero="";
  public Informe(){
 
  }
 
-    public Informe(String cedula, String correo, String estado, String fecha, String puntaje) {
+    public Informe(String cedula, String correo, String estado, String fecha,
+                   String puntaje,String edad, String genero) {
         this.cedula = cedula;
         this.correo = correo;
         this.estado = estado;
         this.fecha = fecha;
         this.puntaje = puntaje;
+        this.edad=edad;
+        this.genero=genero;
+    }
+
+    public String getEdad() {
+        return edad;
+    }
+
+    public void setEdad(String edad) {
+        this.edad = edad;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
     }
 
     public String getCedula() {

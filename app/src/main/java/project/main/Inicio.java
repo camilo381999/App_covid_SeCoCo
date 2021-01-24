@@ -98,8 +98,7 @@ public class Inicio extends AppCompatActivity implements View.OnClickListener {
 
                     //Obtiene valores de la base de datos
                     String name = snapshot.child("nombre").getValue().toString();
-                    String cedula = snapshot.child("cedula").getValue().toString();
-                    String estado = snapshot.child("estado").getValue().toString();
+
                     textViewName.setText(name);
                 }
 

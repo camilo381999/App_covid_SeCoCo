@@ -99,6 +99,9 @@ public class ReprteDeSintomas extends AppCompatActivity  implements View.OnClick
         datosInforme.put("puntaje", puntaje);
         datosInforme.put("fecha", fecha);
         datosInforme.put("estado", estado);
+        datosInforme.put("edad", edad);
+        datosInforme.put("genero", genero);
+
         mDatabase.child("Informes").child(id).updateChildren(datosInforme);
     }
 
@@ -125,6 +128,8 @@ public class ReprteDeSintomas extends AppCompatActivity  implements View.OnClick
 
     String cedula;
     String correo;
+    String edad;
+    String genero;
     private void obtenerInfoDB(){
         String id= mAuth.getCurrentUser().getUid();
         mDatabase.child("Users").child(id).addValueEventListener(new ValueEventListener() {
@@ -133,6 +138,8 @@ public class ReprteDeSintomas extends AppCompatActivity  implements View.OnClick
                 if(snapshot.exists()){
                     cedula= snapshot.child("cedula").getValue().toString();
                     correo= snapshot.child("correo").getValue().toString();
+                    edad=snapshot.child("edad").getValue().toString();
+                    genero=snapshot.child("genero").getValue().toString();
                 }
             }
 
