@@ -20,7 +20,6 @@ public class InformeAdapter extends RecyclerView.Adapter<InformeAdapter.ViewHold
 
     private int resourse;
     private ArrayList<Informe> informesList;
-    private ArrayList<String> informeList2;
 
     public InformeAdapter(ArrayList<Informe> informesList,int resourse){
         this.informesList=informesList;

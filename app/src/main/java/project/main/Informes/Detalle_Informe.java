@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import project.main.Editar;
+import project.main.Envio_correo;
 import project.main.Inicio;
 import project.main.Mostrar;
 import project.main.R;
@@ -23,10 +24,12 @@ public class Detalle_Informe extends AppCompatActivity implements View.OnClickLi
     private TextView fechaReporteUsuarioInfor;
     private TextView edadUsuarioInfor;
     private TextView genUsuarioInfor;
+
     private Informe itemDetail;
 
-    private Button btnAtras,btnCorreo;
+    public  Informe correo=new Informe();
 
+    private Button btnAtras,btnCorreo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,9 @@ public class Detalle_Informe extends AppCompatActivity implements View.OnClickLi
         fechaReporteUsuarioInfor=findViewById(R.id.fechaReporteUsuarioInfor);
         edadUsuarioInfor=findViewById(R.id.edadUsuarioInfor);
         genUsuarioInfor=findViewById(R.id.genUsuarioInfor);
+
+
+
     }
 
     private void initValues() {
@@ -67,6 +73,7 @@ public class Detalle_Informe extends AppCompatActivity implements View.OnClickLi
     }
 
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -76,9 +83,19 @@ public class Detalle_Informe extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.btnAsignarCita:
-
-
+                Intent i2 = new Intent(Detalle_Informe.this, Envio_correo.class);
+                startActivity(i2);
                 break;
+
         }
         }
+/*
+    public String getCorreoEnvio() {
+        return correoEnvio;
+    }
+
+    public void setCorreoEnvio(String correoEnvio) {
+        this.correoEnvio = correoEnvio;
+    }*/
+
 }
