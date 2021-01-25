@@ -1,5 +1,6 @@
 package project.main;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,9 +24,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +39,13 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
     private int MY_PERMISSION_REQUEST_READ_CONTACTS;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
-    DatabaseReference mDatabase;
+    private DatabaseReference mDatabase;
+    double a;
+    double b;
+    private ArrayList<Marker> tmpRealTimeMarkers = new ArrayList<Marker>();
+    private ArrayList<Marker> realTimeMarkers = new ArrayList<Marker>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,15 +68,45 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    double a;
-    double b;
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        mDatabase.child("Ubicacion").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+
+                for (Marker marker: realTimeMarkers){
+                    marker.remove();
+                }
+
+                for (DataSnapshot snapshot: datasnapshot.getChildren()){
+                    Maps1 mp = snapshot.getValue(Maps1.class);
+                    Double latitud = mp.getLatitud();
+                    Double longitud = mp.getLongitud();
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(new LatLng(latitud,longitud));
+                    tmpRealTimeMarkers.add(mMap.addMarker(markerOptions));
+                }
+                realTimeMarkers.clear();
+                realTimeMarkers.addAll(tmpRealTimeMarkers);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(a, b);
+        /*LatLng sydney = new LatLng(a, b);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Ubicación"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
     }
 
     private void subirLatLongFirebase() {
