@@ -24,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +41,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
     double a;
     double b;
     private ArrayList<Marker> tmpRealTimeMarkers = new ArrayList<Marker>();
@@ -53,6 +55,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
         subirLatLongFirebase();
 
         setContentView(R.layout.activity_ubicacion);
@@ -133,6 +136,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
+                            String id = mAuth.getCurrentUser().getUid();
                             a=location.getLatitude();
                             b=location.getLongitude();
                             Toast.makeText(Ubicacion.this, "latitud: "+a+"Longitud: "+b, Toast.LENGTH_LONG).show();
@@ -140,7 +144,8 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                             Map<String,Object> latLang = new HashMap<>();
                             latLang.put("latitud",a);
                             latLang.put("longitud",b);
-                            mDatabase.child("Ubicacion").push().setValue(latLang);
+                            //mDatabase.child("Ubicacion").push().setValue(latLang);
+                            mDatabase.child("Ubicacion").child(id).updateChildren(latLang);
 
                             //aca se llama a maps
                             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
