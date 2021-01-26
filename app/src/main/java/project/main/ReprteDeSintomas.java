@@ -79,7 +79,6 @@ public class ReprteDeSintomas extends AppCompatActivity  implements View.OnClick
             personaMap.put("estado", "Positivo");
             mDatabase.child("Users").child(id).updateChildren(personaMap);
 
-            //Toast.makeText(this, "Tome cuarentena", Toast.LENGTH_LONG).show();
 
             showMessage();
 

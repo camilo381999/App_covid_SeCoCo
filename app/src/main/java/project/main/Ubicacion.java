@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,6 +46,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
     private FirebaseAuth mAuth;
     double a;
     double b;
+    public String estado;
     private ArrayList<Marker> tmpRealTimeMarkers = new ArrayList<Marker>();
     private ArrayList<Marker> realTimeMarkers = new ArrayList<Marker>();
 
@@ -56,8 +59,8 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
        mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+        obtenerInfoDB();
         subirLatLongFirebase();
-
         setContentView(R.layout.activity_ubicacion);
 
     }
@@ -89,9 +92,23 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                     Maps1 mp = snapshot.getValue(Maps1.class);
                     Double latitud = mp.getLatitud();
                     Double longitud = mp.getLongitud();
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(new LatLng(latitud,longitud));
-                    tmpRealTimeMarkers.add(mMap.addMarker(markerOptions));
+                    String estadoUs = mp.getEstado();
+
+                    if(estadoUs=="Negativo"){
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(new LatLng(latitud,longitud));
+                        tmpRealTimeMarkers.add(mMap.addMarker
+                                (markerOptions.icon(BitmapDescriptorFactory.
+                                        defaultMarker(BitmapDescriptorFactory.HUE_GREEN))));
+                    }   else{
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(new LatLng(latitud,longitud));
+                        tmpRealTimeMarkers.add(mMap.addMarker
+                                (markerOptions.icon(BitmapDescriptorFactory.
+                                        defaultMarker(BitmapDescriptorFactory.HUE_RED))));
+                    }
+
+
                 }
                 realTimeMarkers.clear();
                 realTimeMarkers.addAll(tmpRealTimeMarkers);
@@ -102,9 +119,6 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
 
             }
         });
-
-
-
 
         // Add a marker in Sydney and move the camera
         /*LatLng sydney = new LatLng(a, b);
@@ -139,11 +153,15 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                             String id = mAuth.getCurrentUser().getUid();
                             a=location.getLatitude();
                             b=location.getLongitude();
-                            Toast.makeText(Ubicacion.this, "latitud: "+a+"Longitud: "+b, Toast.LENGTH_LONG).show();
+                            Toast.makeText(Ubicacion.this,
+                                    "latitud: "+a+"Longitud: "+b, Toast.LENGTH_LONG).show();
+
                             //Se meten las coordenadas a la base de datos
+
                             Map<String,Object> latLang = new HashMap<>();
                             latLang.put("latitud",a);
                             latLang.put("longitud",b);
+                            latLang.put("estado",estado);
                             //mDatabase.child("Ubicacion").push().setValue(latLang);
                             mDatabase.child("Ubicacion").child(id).updateChildren(latLang);
 
@@ -156,4 +174,22 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                     }
                 });
     }
+
+    private void obtenerInfoDB(){
+        String id= mAuth.getCurrentUser().getUid();
+        mDatabase.child("Users").child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    estado=snapshot.child("estado").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+
 }

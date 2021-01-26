@@ -4,6 +4,7 @@ public class Maps1 {
 
     private double latitud;
     private double longitud;
+    private String estado;
 
     public Maps1() {
     }
@@ -22,5 +23,13 @@ public class Maps1 {
 
     public void setLongitud(double longitud) {
         this.longitud = longitud;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
