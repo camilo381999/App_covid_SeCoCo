@@ -62,6 +62,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.2"
-        android:src="@mipmap/admin"/>
+        android:src="@mipmap/imagenadmin"/>
 
 </LinearLayout>
