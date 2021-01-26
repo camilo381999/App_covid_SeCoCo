@@ -24,11 +24,9 @@ public class Detalle_Informe extends AppCompatActivity implements View.OnClickLi
     private TextView fechaReporteUsuarioInfor;
     private TextView edadUsuarioInfor;
     private TextView genUsuarioInfor;
-
+    private TextView direccionUsuarioInfor;
+    private TextView puntajeUsuarioInfor;
     private Informe itemDetail;
-
-    public  Informe correo=new Informe();
-
     private Button btnAtras,btnCorreo;
 
     @Override
@@ -56,8 +54,8 @@ public class Detalle_Informe extends AppCompatActivity implements View.OnClickLi
         fechaReporteUsuarioInfor=findViewById(R.id.fechaReporteUsuarioInfor);
         edadUsuarioInfor=findViewById(R.id.edadUsuarioInfor);
         genUsuarioInfor=findViewById(R.id.genUsuarioInfor);
-
-
+        puntajeUsuarioInfor=findViewById((R.id.puntoUsuarioInfor));
+        direccionUsuarioInfor=findViewById((R.id.direccionUsuarioInfor));
 
     }
 
@@ -69,6 +67,8 @@ public class Detalle_Informe extends AppCompatActivity implements View.OnClickLi
         fechaReporteUsuarioInfor.setText(itemDetail.getFecha());
         edadUsuarioInfor.setText(itemDetail.getEdad());
         genUsuarioInfor.setText(itemDetail.getGenero());
+        puntajeUsuarioInfor.setText(itemDetail.getPuntaje());
+        direccionUsuarioInfor.setText(itemDetail.getDireccion());
 
     }
 

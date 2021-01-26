@@ -66,8 +66,9 @@ public class Mostrar extends AppCompatActivity implements View.OnClickListener {
                         String puntaje =ds.child("puntaje").getValue().toString();
                         String edad=ds.child("edad").getValue().toString();
                         String genero=ds.child("genero").getValue().toString();
+                        String direccion=ds.child("direccion").getValue().toString();
 
-                        nInformesList.add(new Informe(cedula,correo,estado,fecha,puntaje,edad,genero));
+                        nInformesList.add(new Informe(cedula,correo,estado,fecha,puntaje,edad,genero,direccion));
                     }
                     iAdapter =new InformeAdapter(nInformesList,R.layout.informe);
                     nRecyclerView.setAdapter(iAdapter);

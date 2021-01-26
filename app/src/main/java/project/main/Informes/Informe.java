@@ -10,12 +10,13 @@ public class Informe implements Serializable {
     String puntaje="";
     String edad="";
     String genero="";
+    String  direccion="";
  public Informe(){
 
  }
 
     public Informe(String cedula, String correo, String estado, String fecha,
-                   String puntaje,String edad, String genero) {
+                   String puntaje,String edad, String genero,String direccion) {
         this.cedula = cedula;
         this.correo = correo;
         this.estado = estado;
@@ -23,6 +24,15 @@ public class Informe implements Serializable {
         this.puntaje = puntaje;
         this.edad=edad;
         this.genero=genero;
+        this.direccion=direccion;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public String getEdad() {

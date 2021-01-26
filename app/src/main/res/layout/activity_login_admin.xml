@@ -15,13 +15,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnEditarAdmin"
+            android:id="@+id/btnZonasAdmin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="#000000"
-            android:text="Editar"
+            android:text="Mostrar Zonas"
             android:textColor="#ffffff"
             android:textStyle="bold" />
 
@@ -33,7 +33,7 @@
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="#000000"
-            android:text="Ver usuarios"
+            android:text="Reportes"
             android:textColor="#ffffff"
             android:textStyle="bold" />
 

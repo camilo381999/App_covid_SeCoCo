@@ -5,12 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.common.util.ArrayUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -64,6 +61,7 @@ public class InformeAdapter extends RecyclerView.Adapter<InformeAdapter.ViewHold
         private TextView textViewInformeCor;
         private TextView textViewInformeEst;
         private TextView textViewInformeFec;
+
 
 
         public View view;

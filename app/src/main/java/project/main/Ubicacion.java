@@ -209,9 +209,15 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                         tmpRealTimeMarkers.add(mMap.addMarker
                                 (markerOptions.icon(BitmapDescriptorFactory.
                                         defaultMarker(BitmapDescriptorFactory.HUE_GREEN))));
-                    }   else{
+                    }   else if (estadoUs.equals("admin")){
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(new LatLng(latitud,longitud));
+                        tmpRealTimeMarkers.add(mMap.addMarker
+                                (markerOptions.icon(BitmapDescriptorFactory.
+                                        defaultMarker(BitmapDescriptorFactory.HUE_BLUE))));
+                    }else {
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(new LatLng(latitud, longitud));
                         tmpRealTimeMarkers.add(mMap.addMarker
                                 (markerOptions.icon(BitmapDescriptorFactory.
                                         defaultMarker(BitmapDescriptorFactory.HUE_RED))));

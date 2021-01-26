@@ -78,6 +78,8 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                 dire=(etDir.getText().toString());
                 ed=(etEd.getText().toString());
                 cedu=(etCed.getText().toString());
+                dire=(etDir.getText().toString());
+
 
                 //Obtener dato radioButton
                 if (genero.isChecked()==true){
@@ -124,6 +126,7 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                     map.put("correo",usu);
                     map.put("password",pass);
                     map.put("estado",estado);
+                    map.put("direccion",dire);
 
                     String id= mAuth.getCurrentUser().getUid(); // Obtiene id que da firebase
                     nDatabase.child("Users").child(id).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {

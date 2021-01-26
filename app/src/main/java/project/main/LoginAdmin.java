@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginAdmin extends AppCompatActivity  implements View.OnClickListener {
 
 
-    Button btnEditarAdmin,btnVerUsers,btnSalirAdmin;
+    Button btnMostrarZonas,btnVerUsers,btnSalirAdmin;
     private FirebaseAuth nAuth;
 
     @Override
@@ -22,22 +22,21 @@ public class LoginAdmin extends AppCompatActivity  implements View.OnClickListen
 
         nAuth=FirebaseAuth.getInstance();
 
-        btnEditarAdmin=(Button)findViewById(R.id.btnEditarAdmin);
-        btnEditarAdmin.setOnClickListener(this);
+        btnMostrarZonas=(Button)findViewById(R.id.btnZonasAdmin);
+        btnMostrarZonas.setOnClickListener(this);
 
         btnSalirAdmin=(Button)findViewById(R.id.btnSalirAdmin);
         btnSalirAdmin.setOnClickListener(this);
 
         btnVerUsers=(Button)findViewById(R.id.btnVerUsuarios);
         btnVerUsers.setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btnEditarAdmin:
-                Intent i1=new Intent(LoginAdmin.this,Editar.class);
+            case R.id.btnZonasAdmin:
+                Intent i1=new Intent(LoginAdmin.this,Ubicacion.class);
                 startActivity(i1);
                 break;
 
