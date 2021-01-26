@@ -35,7 +35,7 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
     String dire="";
     String cedu="";
     String ed="";
-    String estado="negativo";
+    String estado="Negativo";
 
     FirebaseAuth mAuth;
     DatabaseReference nDatabase;

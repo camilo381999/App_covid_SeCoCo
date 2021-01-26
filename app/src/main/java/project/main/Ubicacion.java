@@ -7,18 +7,29 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +37,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,11 +54,43 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
     private int MY_PERMISSION_REQUEST_READ_CONTACTS;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
+    LocationRequest locationRequest;
+    LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            if (locationResult == null){
+                return;
+            }
+            for (Location location:locationResult.getLocations()){
+                Log.e("Ubicacion",location.toString());
+                String id = mAuth.getCurrentUser().getUid();
+                a=location.getLatitude();
+                b=location.getLongitude();
+                Toast.makeText(Ubicacion.this,
+                        "latitud: "+a+"Longitud: "+b, Toast.LENGTH_LONG).show();
+
+                //Se meten las coordenadas a la base de datos
+
+                Map<String,Object> latLang = new HashMap<>();
+                latLang.put("latitud",a);
+                latLang.put("longitud",b);
+                latLang.put("estado",estado);
+                //mDatabase.child("Ubicacion").push().setValue(latLang);
+                mDatabase.child("Ubicacion").child(id).updateChildren(latLang);
+
+                //aca se llama a maps
+                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+                mapFragment.getMapAsync(Ubicacion.this);
+            }
+        }
+    };
+
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     double a;
     double b;
-    public String estado;
+    String estado;
     private ArrayList<Marker> tmpRealTimeMarkers = new ArrayList<Marker>();
     private ArrayList<Marker> realTimeMarkers = new ArrayList<Marker>();
 
@@ -57,23 +101,88 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
 
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-       mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(20000);
+        locationRequest.setFastestInterval(10000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         obtenerInfoDB();
-        subirLatLongFirebase();
+        //subirLatLongFirebase();
         setContentView(R.layout.activity_ubicacion);
 
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    protected void onStart() {
+        super.onStart();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            checkSettingsAndStartLocationUpdates();
+        } else {
+            askLocationPermission();
+        }
+    }
+
+    protected void onStop() {
+        super.onStop();
+        stopLocationUpdates();
+    }
+
+    private void checkSettingsAndStartLocationUpdates() {
+        LocationSettingsRequest request = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest).build();
+        SettingsClient client = LocationServices.getSettingsClient(this);
+
+        Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings(request);
+        locationSettingsResponseTask.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                //Setting of device are satisfied and we can start location updates
+                startLocationUpdates();
+            }
+        });
+
+        locationSettingsResponseTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    ResolvableApiException apiException = (ResolvableApiException) e;
+                    try {
+                        apiException.startResolutionForResult(Ubicacion.this, 1001);
+                    } catch (IntentSender.SendIntentException sendIntentException) {
+                        sendIntentException.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+    }
+
+    private void stopLocationUpdates(){
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+    }
+
+    private void askLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(Ubicacion.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSION_REQUEST_READ_CONTACTS);
+            return;
+        }
+        checkSettingsAndStartLocationUpdates();
+    }
+
 
 
     @Override
@@ -119,14 +228,9 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
 
             }
         });
-
-        // Add a marker in Sydney and move the camera
-        /*LatLng sydney = new LatLng(a, b);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Ubicación"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
     }
 
-    private void subirLatLongFirebase() {
+    /*private void subirLatLongFirebase() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -169,11 +273,11 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                                     .findFragmentById(R.id.map);
                             mapFragment.getMapAsync(Ubicacion.this);
-                            //Log.e("latitud: ",location.getLatitude()+"Longitud: "+location.getLongitude());
                         }
                     }
                 });
-    }
+    }*/
+
 
     private void obtenerInfoDB(){
         String id= mAuth.getCurrentUser().getUid();
