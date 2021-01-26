@@ -94,7 +94,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                     Double longitud = mp.getLongitud();
                     String estadoUs = mp.getEstado();
 
-                    if(estadoUs=="Negativo"){
+                    if(estadoUs.equals("Negativo")){
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(new LatLng(latitud,longitud));
                         tmpRealTimeMarkers.add(mMap.addMarker
