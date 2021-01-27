@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +56,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     LocationRequest locationRequest;
+
     LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -88,6 +90,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    boolean resetViewMap=true;
     double a;
     double b;
     String estado;
@@ -98,7 +101,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_ubicacion);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -110,11 +113,13 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         obtenerInfoDB();
+
         //subirLatLongFirebase();
-        setContentView(R.layout.activity_ubicacion);
+
 
     }
 
+    @Override
     protected void onStart() {
         super.onStart();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -125,6 +130,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
         }
     }
 
+    @Override
     protected void onStop() {
         super.onStop();
         stopLocationUpdates();
@@ -188,7 +194,11 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        if(resetViewMap==true) {
+            Log.e("CONDICION_DE_UNA_VEZ","entra en condicional");
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(4.647463, -74.098013), (float) 10.0));
+        }
+        resetViewMap=false;
         mDatabase.child("Ubicacion").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot datasnapshot) {

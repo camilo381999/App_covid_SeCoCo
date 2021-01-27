@@ -90,16 +90,16 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                 }
 
 
-                if (!usu.equals("")&&!pass.equals("")&&!nomb.equals("")&&
-                        !ape.equals("")&&!dire.equals("")&&!ed.equals("")&&!cedu.equals("")){
+                if (!usu.equals("") && !pass.equals("") && !nomb.equals("") &&
+                        !ape.equals("") && !dire.equals("") && !ed.equals("") && !cedu.equals("")) {
 
-                    if (pass.length()>=6){
+                    if (pass.length() >= 6) {
                         registerUser();
-                    }else {
-                        Toast.makeText(this,"La contraseña debe tener 6 caracteres", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(this, "La contraseña debe tener 6 caracteres", Toast.LENGTH_LONG).show();
                     }
-                }else {
-                    Toast.makeText(this,"Debe completar la información", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Debe completar la información", Toast.LENGTH_LONG).show();
                 }
 
                  break;
