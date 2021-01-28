@@ -97,7 +97,6 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
     private ArrayList<Marker> tmpRealTimeMarkers = new ArrayList<Marker>();
     private ArrayList<Marker> realTimeMarkers = new ArrayList<Marker>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
