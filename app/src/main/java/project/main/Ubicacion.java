@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -68,8 +69,7 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                 String id = mAuth.getCurrentUser().getUid();
                 a=location.getLatitude();
                 b=location.getLongitude();
-                Toast.makeText(Ubicacion.this,
-                        "latitud: "+a+"Longitud: "+b, Toast.LENGTH_LONG).show();
+                //Toast.makeText(Ubicacion.this,"latitud: "+a+"Longitud: "+b, Toast.LENGTH_LONG).show();
 
                 //Se meten las coordenadas a la base de datos
 
@@ -106,8 +106,8 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(20000);
-        locationRequest.setFastestInterval(10000);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -232,7 +232,6 @@ public class Ubicacion extends FragmentActivity implements OnMapReadyCallback {
                                 (markerOptions.icon(BitmapDescriptorFactory.
                                         defaultMarker(BitmapDescriptorFactory.HUE_RED))));
                     }
-
 
                 }
                 realTimeMarkers.clear();
