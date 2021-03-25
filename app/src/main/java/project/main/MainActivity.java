@@ -1,14 +1,14 @@
 package project.main;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         usuario=user.getText().toString();
         contraseña=pass.getText().toString();
         switch (v.getId()){
+
             case R.id.btnEntrar:
 
                 if((!usuario.equals("")) && (!contraseña.equals(""))){

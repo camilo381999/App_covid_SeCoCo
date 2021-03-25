@@ -131,6 +131,7 @@ public class ReprteDeSintomas extends AppCompatActivity  implements View.OnClick
     String edad;
     String genero;
     String direccion;
+
     private void obtenerInfoDB(){
         String id= mAuth.getCurrentUser().getUid();
         mDatabase.child("Users").child(id).addValueEventListener(new ValueEventListener() {
